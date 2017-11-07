@@ -12,12 +12,12 @@ public class Location {
     public Location() {
     }
 
-    public Double getAltitude() {
-        return altitude;
+    public Coordinates getCoordinates() {
+        return coordinates;
     }
 
-    public void setAltitude(Double altitude) {
-        this.altitude = altitude;
+    public Double getAltitude() {
+        return altitude;
     }
 
     public String getRelativeLocation() {
@@ -28,8 +28,8 @@ public class Location {
         this.relativeLocation = relativeLocation;
     }
 
-    public Coordinates getValue() {
-        return coordinates;
+    public void setAltitude(Double altitude) {
+        this.altitude = altitude;
     }
 
     public void setCoordinates(Coordinates coordinates) {

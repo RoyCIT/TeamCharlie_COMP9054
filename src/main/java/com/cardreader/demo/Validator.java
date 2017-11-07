@@ -20,9 +20,9 @@ public class Validator {
         currentEvent.resolveLocation();
     }
     
-    public long getId() {
-        return id;
-    }
+    //public long getId() {
+    //    return id;
+    //}
 
     public String getReason() {
         return "Impossible time-distance event.";

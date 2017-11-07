@@ -17,7 +17,7 @@ public class CurrentEvent {
 
     public void resolveLocation() {
         RestTemplate restTemplate = new RestTemplate();
-        location = restTemplate.getForObject(url + panelId, Location.class);;
+        location = restTemplate.getForObject(url + panelId, Location.class);
     }
 
     public String getPanelId() {
