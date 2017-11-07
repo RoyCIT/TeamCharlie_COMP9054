@@ -1,22 +1,37 @@
 package com.cardreader.demo;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Coordinates {
 
-    private final double longitude;
-    private final double latitude;
+    private double longitude;
+    private double latitude;
 
     public Coordinates() {
-       // this.latitude = json.latitude;
-       // this.longitude = json.longitude;
-        this.latitude = 42.37392;
-        this.longitude = -71.116374;
-    }
-
-    public Double getLatitude() {
-        return latitude;
     }
 
     public Double getLongitude() {
-        return longitude;
+        return this.longitude;
+    }
+
+    public Double getLatitude() {
+        return this.latitude;
+    }
+
+    public void setLongitude(Double longitude) {
+        this.longitude = longitude;
+    }
+
+    public void setLatitude(Double latitude) {
+        this.latitude = latitude;
+    }
+
+    @Override
+    public String toString() {
+        return "Coordinates{" +
+                "longitude=" + longitude +
+                ", latitude='" + latitude + '\'' +
+                '}';
     }
 }

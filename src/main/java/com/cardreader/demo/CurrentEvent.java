@@ -1,20 +1,23 @@
 package com.cardreader.demo;
 
+import org.springframework.web.client.RestTemplate;
+
 public class CurrentEvent {
 
     private final String panelId;
     private final String cardId;
-    private Location currentLocation;
+    private final String url = "http://uuidlocator.cfapps.io/api/panels/";
+    private Location location;
 
 
     public CurrentEvent(String panelId, String cardId) {
         this.panelId = panelId;
         this.cardId = cardId;
-        this.currentLocation = new Location(panelId);
     }
 
     public void resolveLocation() {
-        currentLocation.resolve();
+        RestTemplate restTemplate = new RestTemplate();
+        location = restTemplate.getForObject(url + panelId, Location.class);;
     }
 
     public String getPanelId() {
@@ -25,5 +28,6 @@ public class CurrentEvent {
         return cardId;
     }
 
-    public Location getCurrentLocation() { return currentLocation; }
+    public Location getlocation() {
+        return location; }
 }

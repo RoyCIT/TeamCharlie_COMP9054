@@ -24,14 +24,6 @@ public class Validator {
         return id;
     }
 
-    //public String getCardId() {
-    //    return cardId;
-    //}
-
-    //public String getPanelId() {
-    //    return panelId;
-    //}
-
     public String getReason() {
         return "Impossible time-distance event.";
     }
