@@ -30,7 +30,7 @@ public class JsonModel {
         return instance;
     }
 
-    public boolean populate(String panelId, String cardId) {
+    public void populate(String panelId, String cardId) {
         boolean accessAllowed;
 
         currentEvent = getCurrentEvent(panelId, cardId);
@@ -55,8 +55,6 @@ public class JsonModel {
 
         currentEvent.setAccessAllowed(accessAllowed);
         cacheEvent(currentEvent);
-
-        return accessAllowed;
     }
 
     private boolean validateLocations(Event previousEvent, Event currentEvent) {
@@ -64,9 +62,7 @@ public class JsonModel {
     }
 
     private void cacheEvent(Event theEvent) {
-        if (currentEvent != null) {
-            eventCacher.addEventToCache(currentEvent);
-        }
+        if (theEvent != null) eventCacher.addEventToCache(theEvent);
     }
 
     private Event getCurrentEvent(String panelId, String cardId) {
@@ -81,7 +77,6 @@ public class JsonModel {
         currentEvent = new Event(panelId, cardId);
         currentEvent.resolveLocation();
         return currentEvent;
-
     }
 
     public String getReason() {
