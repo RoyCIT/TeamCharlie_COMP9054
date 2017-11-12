@@ -9,14 +9,13 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 @RestController
 public class ValidationController {
 
-    private JsonModel jsonModel;
-
     @RequestMapping(value = "/api/panels/request", method = GET)
-    //(method=GET)
     public JsonModel jsonModel(@RequestParam(value="panelid", defaultValue="PanelId") String panelid,
-                               @RequestParam(value="cardid", defaultValue="CardId") String cardid) {
-        jsonModel = JsonModel.getInstance();
-        jsonModel.populate(panelid,cardid);
+                               @RequestParam(value="cardid", defaultValue="CardId") String cardid,
+                               @RequestParam(value="allowed", defaultValue="false") String accessAllowed) {
+
+        JsonModel jsonModel = JsonModel.getInstance();
+        jsonModel.populate(panelid, cardid, accessAllowed);
 
         return jsonModel;
     }

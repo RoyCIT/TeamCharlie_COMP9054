@@ -11,7 +11,6 @@ public class EventCacher {
     }
 
     public Object getEventFromCache(String key) {
-        //String key = event.getPanelId()+event.getCardId();
         return this.cache.get(key);
     }
 
@@ -23,5 +22,4 @@ public class EventCacher {
         }
         this.cache.put(key, event);
     }
-
 }

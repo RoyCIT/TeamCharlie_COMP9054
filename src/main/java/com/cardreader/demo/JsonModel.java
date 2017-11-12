@@ -1,16 +1,13 @@
 package com.cardreader.demo;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonPropertyOrder({ "reason", "currentEvent", "previousEvent", "accessAlllowed" })
+@JsonPropertyOrder({ "reason", "currentEvent", "previousEvent", "validEvent" })
 public class JsonModel {
 
     private static JsonModel instance = null;
-    private static String panelId;
-    private static String cardId;
     private Event currentEvent;
     private Event previousEvent;
     private EventCacher eventCacher;
@@ -19,8 +16,8 @@ public class JsonModel {
 
     protected JsonModel() {
         this.validEvent = false;
-        eventCacher = new EventCacher();
-        reason = "Impossible time-distance event.";
+        this.eventCacher = new EventCacher();
+        this.reason = "Valid event.";
     }
 
     public static JsonModel getInstance() {
@@ -30,30 +27,21 @@ public class JsonModel {
         return instance;
     }
 
-    public void populate(String panelId, String cardId) {
-        boolean accessAllowed;
+    public void populate(String panelId, String cardId, String accessAllowed) {
 
-        currentEvent = getCurrentEvent(panelId, cardId);
+        currentEvent = getCurrentEvent(panelId, cardId, accessAllowed);
         previousEvent = getPreviousEventFromKey(currentEvent.getKey());
 
-        // Once a card is identified as a clone then maintain that state
-        // This prevents a cloned card from being reused.
-        if (previousEvent != null && previousEvent.getValidEvent()) {
-            currentEvent.setValidEvent(true);
-            accessAllowed = false;
-            // reason: this card has previously been detected as a clone
-        }
-        else if (currentEvent.getAccessAllowed()) {
-            accessAllowed = validateLocations(currentEvent, previousEvent);
-            // Set flag to identify as a cloned card
-            currentEvent.setValidEvent(accessAllowed);
-            // if !accessAllowed reason: this card is currently detected as a clone
+        if (currentEvent.getAccessAllowed().equals("true")) {
+            validEvent = validateLocations(currentEvent, previousEvent);
+            if (!validEvent) {
+                reason = "Impossible time-distance event.";
+            }
         }
         else {
-            accessAllowed = false;
+            reason = "Local access denied for this event.";
         }
 
-        currentEvent.setAccessAllowed(accessAllowed);
         cacheEvent(currentEvent);
     }
 
@@ -65,16 +53,16 @@ public class JsonModel {
         if (theEvent != null) eventCacher.addEventToCache(theEvent);
     }
 
-    private Event getCurrentEvent(String panelId, String cardId) {
-        return populateCurrentEvent(panelId, cardId);
+    private Event getCurrentEvent(String panelId, String cardId, String accessAllowed) {
+        return populateCurrentEvent(panelId, cardId, accessAllowed);
     }
 
     private Event getPreviousEventFromKey(String key) {
         return (Event)eventCacher.getEventFromCache(key);
     }
 
-    private Event populateCurrentEvent(String panelId, String cardId) {
-        currentEvent = new Event(panelId, cardId);
+    private Event populateCurrentEvent(String panelId, String cardId, String accessAllowed) {
+        currentEvent = new Event(panelId, cardId, accessAllowed);
         currentEvent.resolveLocation();
         return currentEvent;
     }
@@ -84,16 +72,15 @@ public class JsonModel {
     }
 
     public Event getCurrentEvent() {
-        return currentEvent;
+        return this.currentEvent;
     }
 
     public Event getPreviousEvent() {
-        return previousEvent;
+        return this.previousEvent;
     }
 
-    @JsonProperty("validEvent")
     public Boolean getValidEvent() {
-        return this.currentEvent.getValidEvent();
+        return this.validEvent;
     }
 
 }

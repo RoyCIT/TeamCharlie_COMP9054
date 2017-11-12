@@ -1,39 +1,45 @@
 package com.cardreader.demo;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import org.springframework.web.client.RestTemplate;
+import java.sql.Timestamp;
 
+@JsonPropertyOrder({ "panelId", "cardId", "timestamp", "location", "accessAllowed" })
 public class Event {
 
     private final String panelId;
     private final String cardId;
-    private final String url = "http://uuidlocator.cfapps.io/api/panels/";
     private Location location;
+    private final String accessAllowed;
     @JsonIgnore
-    private Boolean validEvent;
-    private Boolean accessAllowed;
-    @JsonIgnore
-    private String key;
+    private final String key;
+    private Timestamp timestamp;
 
-    public Event(String panelId, String cardId) {
+    public Event(String panelId, String cardId, String accessAllowed) {
         this.panelId = panelId;
         this.cardId = cardId;
-        this.validEvent = false;
-        this.accessAllowed = false;
+        this.accessAllowed = accessAllowed;
         this.key = getPanelId()+getCardId();
+        this.timestamp = new Timestamp(System.currentTimeMillis());
     }
 
     public void resolveLocation() {
         RestTemplate restTemplate = new RestTemplate();
+        String url = "http://uuidlocator.cfapps.io/api/panels/";
         location = restTemplate.getForObject(url + panelId, Location.class);
     }
 
     public String getPanelId() {
-        return panelId;
+        return this.panelId;
     }
 
     public String getCardId() {
-        return cardId;
+        return this.cardId;
+    }
+
+    public Timestamp getTimestamp() {
+        return this.timestamp;
     }
 
     public String getKey() {
@@ -41,22 +47,10 @@ public class Event {
     }
 
     public Location getlocation() {
-        return location;
+        return this.location;
     }
 
-    public Boolean getValidEvent() {
-        return this.validEvent;
-    }
-
-    public void setValidEvent(Boolean isValid) {
-        this.validEvent = isValid;
-    }
-
-    public Boolean getAccessAllowed() {
+    public String getAccessAllowed() {
         return this.accessAllowed;
-    }
-
-    public void setAccessAllowed (Boolean accessAllowed) {
-        this.accessAllowed = accessAllowed;
     }
 }

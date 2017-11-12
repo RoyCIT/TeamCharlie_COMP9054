@@ -1,8 +1,10 @@
 package com.cardreader.demo;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
+@JsonPropertyOrder({ "coordinates", "altitude", "relativeLocation" })
 public class Location {
 
     private Double altitude;
@@ -13,15 +15,15 @@ public class Location {
     }
 
     public Coordinates getCoordinates() {
-        return coordinates;
+        return this.coordinates;
     }
 
     public Double getAltitude() {
-        return altitude;
+        return this.altitude;
     }
 
     public String getRelativeLocation() {
-        return relativeLocation;
+        return this.relativeLocation;
     }
 
     public void setRelativeLocation(String relativeLocation) {
