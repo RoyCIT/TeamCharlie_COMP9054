@@ -1,5 +1,6 @@
 package com.cardreader.demo;
 
+import com.cardreader.demo.Mqtt.MqttUtility;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
@@ -36,7 +37,9 @@ public class JsonModel {
             validEvent = validateLocations(currentEvent, previousEvent);
             if (!validEvent) {
                 reason = "Impossible time-distance event.";
+
             }
+            MqttUtility.getInstance().publishAlert(currentEvent,previousEvent );
         }
         else {
             reason = "Local access denied for this event.";
