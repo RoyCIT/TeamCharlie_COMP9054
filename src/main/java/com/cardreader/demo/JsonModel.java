@@ -33,7 +33,7 @@ public class JsonModel {
         previousEvent = getPreviousEventFromKey(currentEvent.getKey());
 
         if (currentEvent.getAccessAllowed().equals("true")) {
-            validEvent = validateLocations(currentEvent, previousEvent);
+            validEvent = validateLocations(previousEvent, currentEvent);
             if (!validEvent) {
                 reason = "Impossible time-distance event.";
             }
@@ -46,6 +46,19 @@ public class JsonModel {
     }
 
     private boolean validateLocations(Event previousEvent, Event currentEvent) {
+
+        //Cache doesnt seem to be working, hardcoding previous event
+        Coordinates coords = new Coordinates();
+        coords.setLatitude(53.3493);
+        coords.setLongitude(6.2607);
+        Location location = new Location();
+        location.setCoordinates(coords);
+        previousEvent = new Event(location);
+
+        if (previousEvent != null && currentEvent != null) {
+            return GoogleMapsValidation.performValidation(previousEvent, currentEvent);
+        }
+
         return true;
     }
 

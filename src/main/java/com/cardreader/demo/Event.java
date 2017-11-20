@@ -20,8 +20,18 @@ public class Event {
         this.panelId = panelId;
         this.cardId = cardId;
         this.accessAllowed = accessAllowed;
-        this.key = getPanelId()+getCardId();
+        this.key = cardId;
         this.timestamp = new Timestamp(System.currentTimeMillis());
+    }
+
+    //TODO: Remove me
+    public Event(Location location) {
+        this.location = location;
+        this.panelId = "1234";
+        this.cardId = "1232132";
+        this.accessAllowed = "true";
+        this.key = this.cardId;
+        this.timestamp = new Timestamp(System.currentTimeMillis() - 10000000);
     }
 
     public void resolveLocation() {
