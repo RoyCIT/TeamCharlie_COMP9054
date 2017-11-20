@@ -24,22 +24,6 @@ public class Event {
         this.timestamp = new Timestamp(System.currentTimeMillis());
     }
 
-    //TODO: Remove this
-    public Event() {
-        Coordinates coords = new Coordinates();
-        coords.setLongitude(53.3493);
-        coords.setLatitude(6.2607);
-        Location location = new Location();
-        location.setCoordinates(coords);
-        this.location = location;
-        this.location.setAltitude(100.0);
-        this.panelId = "1234";
-        this.cardId = "1232132";
-        this.accessAllowed = "true";
-        this.key = this.cardId;
-        this.timestamp = new Timestamp(System.currentTimeMillis() - 1000000);
-    }
-
     public void resolveLocation() {
         RestTemplate restTemplate = new RestTemplate();
         String url = "http://uuidlocator.cfapps.io/api/panels/";

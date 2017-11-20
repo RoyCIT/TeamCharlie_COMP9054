@@ -47,9 +47,6 @@ public class JsonModel {
 
     private boolean validateLocations(Event previousEvent, Event currentEvent) {
 
-        //Cache doesnt seem to be working, hardcoding previous event
-        previousEvent = new Event();
-
         if (previousEvent != null && currentEvent != null) {
             return GoogleMapsValidation.performValidation(previousEvent, currentEvent);
         }

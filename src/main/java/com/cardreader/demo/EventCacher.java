@@ -15,7 +15,7 @@ public class EventCacher {
     }
 
     public void addEventToCache(Event event) {
-        String key = event.getPanelId()+event.getCardId();
+        String key = event.getCardId();
         // If the key is in cache then replace with the latest details
         if (this.cache.containsKey(key)) {
             this.cache.remove(key);
