@@ -20,7 +20,7 @@ public class Event {
         this.panelId = panelId;
         this.cardId = cardId;
         this.accessAllowed = accessAllowed;
-        this.key = getPanelId()+getCardId();
+        this.key = cardId;
         this.timestamp = new Timestamp(System.currentTimeMillis());
     }
 

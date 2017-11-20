@@ -34,7 +34,7 @@ public class JsonModel {
         previousEvent = getPreviousEventFromKey(currentEvent.getKey());
 
         if (currentEvent.getAccessAllowed().equals("true")) {
-            validEvent = validateLocations(currentEvent, previousEvent);
+            validEvent = validateLocations(previousEvent, currentEvent);
             if (!validEvent) {
                 reason = "Impossible time-distance event.";
 
@@ -49,6 +49,11 @@ public class JsonModel {
     }
 
     private boolean validateLocations(Event previousEvent, Event currentEvent) {
+
+        if (previousEvent != null && currentEvent != null) {
+            return GoogleMapsValidation.performValidation(previousEvent, currentEvent);
+        }
+
         return true;
     }
 

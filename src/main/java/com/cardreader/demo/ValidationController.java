@@ -15,6 +15,7 @@ public class ValidationController {
                                @RequestParam(value="allowed", defaultValue="false") String accessAllowed) {
 
         JsonModel jsonModel = JsonModel.getInstance();
+
         jsonModel.populate(panelid, cardid, accessAllowed);
 
         return jsonModel;
