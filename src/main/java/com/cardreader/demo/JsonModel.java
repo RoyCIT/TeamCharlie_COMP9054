@@ -48,12 +48,7 @@ public class JsonModel {
     private boolean validateLocations(Event previousEvent, Event currentEvent) {
 
         //Cache doesnt seem to be working, hardcoding previous event
-        Coordinates coords = new Coordinates();
-        coords.setLatitude(53.3493);
-        coords.setLongitude(6.2607);
-        Location location = new Location();
-        location.setCoordinates(coords);
-        previousEvent = new Event(location);
+        previousEvent = new Event();
 
         if (previousEvent != null && currentEvent != null) {
             return GoogleMapsValidation.performValidation(previousEvent, currentEvent);
