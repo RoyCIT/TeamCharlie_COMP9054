@@ -44,11 +44,9 @@ public class GoogleMapsValidation {
         //Mode
         url = url + "&mode=transit";
 
-        //TODO: Investigate bug with switched lat/lng
-
         //Coordinates
-        url = url + "&origins=" + first.getLongitude() + "," + first.getLatitude();
-        url = url + "&destinations=" + second.getLongitude() + "," + second.getLatitude();
+        url = url + "&origins=" + first.getLatitude() + "," + first.getLongitude();
+        url = url + "&destinations=" + second.getLatitude() + "," + second.getLongitude();
 
         RestTemplate restTemplate = new RestTemplate();
         GoogleMapsResponse result = restTemplate.getForObject(url, GoogleMapsResponse.class);
