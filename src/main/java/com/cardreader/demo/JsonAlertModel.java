@@ -1,6 +1,6 @@
 package com.cardreader.demo;
 
-import org.json.JSONArray;
+import com.cardreader.demo.Model.Event;
 import org.json.JSONObject;
 
 public class JsonAlertModel {

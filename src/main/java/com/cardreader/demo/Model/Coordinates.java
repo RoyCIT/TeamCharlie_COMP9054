@@ -1,4 +1,4 @@
-package com.cardreader.demo;
+package com.cardreader.demo.Model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;

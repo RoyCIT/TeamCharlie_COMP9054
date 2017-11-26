@@ -1,4 +1,4 @@
-package com.cardreader.demo;
+package com.cardreader.demo.Model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
@@ -6,7 +6,7 @@ import org.springframework.web.client.RestTemplate;
 import java.sql.Timestamp;
 
 @JsonPropertyOrder({ "panelId", "cardId", "timestamp", "location", "accessAllowed" })
-public class Event {
+public class Event implements IEvent {
 
     private final String panelId;
     private final String cardId;

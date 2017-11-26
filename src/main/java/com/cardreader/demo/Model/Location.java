@@ -1,11 +1,11 @@
-package com.cardreader.demo;
+package com.cardreader.demo.Model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonPropertyOrder({ "coordinates", "altitude", "relativeLocation" })
-public class Location {
+public class Location implements ILocation{
 
     private Double altitude;
     private String relativeLocation;
@@ -14,14 +14,17 @@ public class Location {
     public Location() {
     }
 
+    @Override
     public Coordinates getCoordinates() {
         return this.coordinates;
     }
 
+    @Override
     public Double getAltitude() {
         return this.altitude;
     }
 
+    @Override
     public String getRelativeLocation() {
         return this.relativeLocation;
     }
@@ -36,14 +39,5 @@ public class Location {
 
     public void setCoordinates(Coordinates coordinates) {
         this.coordinates = coordinates;
-    }
-
-    @Override
-    public String toString() {
-        return "Location{" +
-                "altitude='" + altitude + '\'' +
-                "relativeLocation='" + relativeLocation + '\'' +
-                ", coordinates=" + coordinates +
-                '}';
     }
 }

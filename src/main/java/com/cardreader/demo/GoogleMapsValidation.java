@@ -1,9 +1,9 @@
 package com.cardreader.demo;
 
 import com.cardreader.demo.GoogleMapsResponse.GoogleMapsResponse;
+import com.cardreader.demo.Model.Coordinates;
+import com.cardreader.demo.Model.Event;
 import org.springframework.web.client.RestTemplate;
-
-import static java.lang.Math.*;
 
 public class GoogleMapsValidation {
     private static String GOOGLE_API_KEY = "AIzaSyBTWLLeJ7HU6ojUs39VtTzXNtyHrzjMyQg";

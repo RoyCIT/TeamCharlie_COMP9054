@@ -1,10 +1,12 @@
-package com.cardreader.demo;
+package com.cardreader.demo.Controller;
+
+import com.cardreader.demo.Model.Event;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class EventCacher {
-    Map cache;
+    private Map cache;
 
     public EventCacher() {
         this.cache = new HashMap<String, Object>();

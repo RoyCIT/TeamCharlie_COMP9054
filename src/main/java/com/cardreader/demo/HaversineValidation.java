@@ -1,5 +1,7 @@
 package com.cardreader.demo;
 
+import com.cardreader.demo.Model.Location;
+
 import static java.lang.Math.*;
 import static java.lang.Math.pow;
 import static java.lang.Math.sqrt;
