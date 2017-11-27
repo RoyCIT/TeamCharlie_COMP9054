@@ -43,6 +43,7 @@ public class ValidationController {
         // TODO: Check cacher - hashmap
         // TODO: create inmemorystore for locations and ability for client to update / refresh data from uuid
         // TODO: Comments
+        // TODO: Error handling
 
         String reason;
         boolean isValidEvent = false;
@@ -51,14 +52,23 @@ public class ValidationController {
         Event previousEvent = getPreviousEventFromKey(currentEvent.getKey());
 
         if (currentEvent.getAccessAllowed().equals("true")) {
-            isValidEvent = validateLocations(previousEvent, currentEvent);
 
-            if (isValidEvent) {
-                reason = "Valid event.";
+            // Has UUID locator been successful
+            if (currentEvent.getlocation() != null) {
+                isValidEvent = validateLocations(previousEvent, currentEvent);
+
+                if (isValidEvent) {
+                    reason = "Valid event.";
+                }
+                else {
+                    reason = "Impossible time-distance event.";
+                    doAlert = true;
+                }
+                // Only cache events where the location has been resolved
+                cacheEvent(currentEvent);
             }
             else {
-                reason = "Impossible time-distance event.";
-                doAlert = true;
+                reason = "Unknown panel id, unable to resolve location";
             }
         }
         else {
@@ -74,7 +84,6 @@ public class ValidationController {
         if (doAlert) {
             MqttUtility.getInstance().publishAlert(store.getCurrentEvent(), store.getPreviousEvent());
         }
-        cacheEvent(currentEvent);
     }
 
     private boolean validateLocations(Event previousEvent, Event currentEvent) {
@@ -101,6 +110,7 @@ public class ValidationController {
     private Event populateCurrentEvent(String panelId, String cardId, String accessAllowed) {
         Event currentEvent = new Event(panelId, cardId, accessAllowed);
         currentEvent.resolveLocation();
+
         return currentEvent;
     }
 }

@@ -2,6 +2,8 @@ package com.cardreader.demo.Model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
 import java.sql.Timestamp;
 
@@ -27,7 +29,16 @@ public class Event implements IEvent {
     public void resolveLocation() {
         RestTemplate restTemplate = new RestTemplate();
         String url = "http://uuidlocator.cfapps.io/api/panels/";
-        location = restTemplate.getForObject(url + panelId, Location.class);
+
+        try {
+            location = restTemplate.getForObject(url + panelId, Location.class);
+        }
+        catch (HttpMessageNotReadableException notReadable) {
+            // Do nothing??
+        }
+        catch (HttpServerErrorException serverError) {
+            // Do nothing??
+        }
     }
 
     public String getPanelId() {
@@ -53,4 +64,5 @@ public class Event implements IEvent {
     public String getAccessAllowed() {
         return this.accessAllowed;
     }
+
 }
