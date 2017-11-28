@@ -1,4 +1,4 @@
-package com.cardreader.demo;
+package com.cardreader.demo.Model;
 
 import com.cardreader.demo.Model.Event;
 import org.json.JSONObject;

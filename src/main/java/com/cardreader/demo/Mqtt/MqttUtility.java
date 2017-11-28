@@ -1,7 +1,7 @@
 package com.cardreader.demo.Mqtt;
 
 import com.cardreader.demo.Model.Event;
-import com.cardreader.demo.JsonAlertModel;
+import com.cardreader.demo.Model.JsonAlertModel;
 import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;

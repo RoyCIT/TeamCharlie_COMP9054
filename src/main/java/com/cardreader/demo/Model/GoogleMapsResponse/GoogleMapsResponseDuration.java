@@ -1,5 +1,5 @@
 
-package com.cardreader.demo;
+package com.cardreader.demo.Model.GoogleMapsResponse;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -15,7 +15,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
     "text",
     "value"
 })
-public class GoogleMapsResponseDistance {
+public class GoogleMapsResponseDuration {
 
     @JsonProperty("text")
     private String text;

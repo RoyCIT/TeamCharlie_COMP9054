@@ -1,10 +1,8 @@
 
-package com.cardreader.demo.GoogleMapsResponse;
+package com.cardreader.demo.Model.GoogleMapsResponse;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -14,23 +12,36 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
-    "elements"
+    "text",
+    "value"
 })
-public class GoogleMapsResponseRow {
+public class GoogleMapsResponseDistance {
 
-    @JsonProperty("elements")
-    private List<GoogleMapsResponseElement> elements = null;
+    @JsonProperty("text")
+    private String text;
+    @JsonProperty("value")
+    private Integer value;
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
-    @JsonProperty("elements")
-    public List<GoogleMapsResponseElement> getElements() {
-        return elements;
+    @JsonProperty("text")
+    public String getText() {
+        return text;
     }
 
-    @JsonProperty("elements")
-    public void setElements(List<GoogleMapsResponseElement> elements) {
-        this.elements = elements;
+    @JsonProperty("text")
+    public void setText(String text) {
+        this.text = text;
+    }
+
+    @JsonProperty("value")
+    public Integer getValue() {
+        return value;
+    }
+
+    @JsonProperty("value")
+    public void setValue(Integer value) {
+        this.value = value;
     }
 
     @JsonAnyGetter

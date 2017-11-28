@@ -1,4 +1,4 @@
-package com.cardreader.demo;
+package com.cardreader.demo.Controller;
 
 import com.cardreader.demo.Model.Location;
 
@@ -20,7 +20,7 @@ public class HaversineValidation {
         double c = 2 * atan2(sqrt(a), sqrt(1 - a));
         double distance = EARTH_RADIUS * c;
 
-        double height = first.getAltitude() - second.getAltitude();
+        double height = 0.0;
 
         distance = sqrt(pow(distance, 2) + pow(height, 2));
 

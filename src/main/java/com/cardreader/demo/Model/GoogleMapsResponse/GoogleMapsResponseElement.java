@@ -1,11 +1,9 @@
 
-package com.cardreader.demo.GoogleMapsResponse;
+package com.cardreader.demo.Model.GoogleMapsResponse;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import com.cardreader.demo.GoogleMapsResponseDistance;
-import com.cardreader.demo.GoogleMapsResponseDuration;
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;

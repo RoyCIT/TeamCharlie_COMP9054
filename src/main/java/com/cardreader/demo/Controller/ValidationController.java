@@ -1,7 +1,6 @@
 package com.cardreader.demo.Controller;
 
 import com.cardreader.demo.Model.Event;
-import com.cardreader.demo.GoogleMapsValidation;
 import com.cardreader.demo.Mqtt.MqttUtility;
 import com.cardreader.demo.Store.Store;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -89,7 +88,7 @@ public class ValidationController {
     private boolean validateLocations(Event previousEvent, Event currentEvent) {
 
         if (previousEvent != null && currentEvent != null) {
-            return GoogleMapsValidation.performValidation(previousEvent, currentEvent);
+            return GoogleMapsValidationController.performValidation(previousEvent, currentEvent);
         }
 
         return true;

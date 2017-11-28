@@ -1,11 +1,11 @@
-package com.cardreader.demo;
+package com.cardreader.demo.Controller;
 
-import com.cardreader.demo.GoogleMapsResponse.GoogleMapsResponse;
+import com.cardreader.demo.Model.GoogleMapsResponse.GoogleMapsResponse;
 import com.cardreader.demo.Model.Coordinates;
 import com.cardreader.demo.Model.Event;
 import org.springframework.web.client.RestTemplate;
 
-public class GoogleMapsValidation {
+public class GoogleMapsValidationController {
     private static String GOOGLE_API_KEY = "AIzaSyBTWLLeJ7HU6ojUs39VtTzXNtyHrzjMyQg";
 
     public static Boolean performValidation(Event previousEvent, Event currentEvent) {
@@ -32,6 +32,11 @@ public class GoogleMapsValidation {
 
         Double time = distance / (speed * 0.277778); // distance / metres per second
 
+        //Handle altitude when distance between points is less than 200m
+        if (distance < 200) {
+            double altitudeChange = Math.abs(previousEvent.getlocation().getAltitude() - currentEvent.getlocation().getAltitude());
+            time = time + (0.75 * altitudeChange); //0.75 metres per second
+        }
         return time < timeDifference;
     }
 
@@ -41,16 +46,18 @@ public class GoogleMapsValidation {
         //API Key
         url = url + "key=" + GOOGLE_API_KEY;
 
-        //Mode
-        url = url + "&mode=transit";
-
         //Coordinates
         url = url + "&origins=" + first.getLatitude() + "," + first.getLongitude();
         url = url + "&destinations=" + second.getLatitude() + "," + second.getLongitude();
 
         RestTemplate restTemplate = new RestTemplate();
         GoogleMapsResponse result = restTemplate.getForObject(url, GoogleMapsResponse.class);
-        Integer distance = result.getRows().get(0).getElements().get(0).getDistance().getValue();
-        return distance;
+
+        try {
+            Integer distance = result.getRows().get(0).getElements().get(0).getDistance().getValue();
+            return distance;
+        } catch (NullPointerException e) {
+            return null;
+        }
     }
 }

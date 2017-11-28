@@ -1,5 +1,5 @@
 
-package com.cardreader.demo.GoogleMapsResponse;
+package com.cardreader.demo.Model.GoogleMapsResponse;
 
 import java.util.HashMap;
 import java.util.List;
