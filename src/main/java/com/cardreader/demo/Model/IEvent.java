@@ -16,5 +16,5 @@ public interface IEvent {
 
     Location getlocation();
 
-    String getAccessAllowed();
+    boolean getAccessAllowed();
 }

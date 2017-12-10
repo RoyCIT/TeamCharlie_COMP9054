@@ -5,14 +5,16 @@ import com.cardreader.demo.Model.Event;
 import java.util.HashMap;
 import java.util.Map;
 
-public class EventCacher {
-    private Map cache;
+public class EventCacher { ;
+    private Map<String, Event> cache;
 
     public EventCacher() {
-        this.cache = new HashMap<String, Object>();
+
+        this.cache = new HashMap();
     }
 
-    public Object getEventFromCache(String key) {
+    public Event getEventFromCache(String key) {
+
         return this.cache.get(key);
     }
 

@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping (value = "/api")
 public class ValidationController {
 
-    // internal store
+    // Internal store
     // Spring knows which polymorphic type to use if there's a single implementation of the
     // interface and it's annotated with @Component and Spring's component scan enabled.
     @Autowired
@@ -30,19 +30,18 @@ public class ValidationController {
     @ResponseStatus(HttpStatus.OK)
     public Store getAccessByEvents(@RequestParam(value="panelid") String panelid,
                                    @RequestParam(value="cardid") String cardid,
-                                   @RequestParam(value="allowed") String accessAllowed) {
+                                   @RequestParam(value="allowed") boolean accessAllowed) {
 
         getEvents(panelid, cardid, accessAllowed);
 
         return store;
     }
 
-    private void getEvents(String panelId, String cardId, String accessAllowed) {
+    private void getEvents(String panelId, String cardId, boolean accessAllowed) {
 
-        // TODO: Check cacher - hashmap
         // TODO: create inmemorystore for locations and ability for client to update / refresh data from uuid
         // TODO: Comments
-        // TODO: Error handling
+        // TODO: Swagger
 
         String reason;
         boolean isValidEvent = false;
@@ -50,7 +49,7 @@ public class ValidationController {
         Event currentEvent = getCurrentEvent(panelId, cardId, accessAllowed);
         Event previousEvent = getPreviousEventFromKey(currentEvent.getKey());
 
-        if (currentEvent.getAccessAllowed().equals("true")) {
+        if (currentEvent.getAccessAllowed()) {
 
             // Has UUID locator been successful
             if (currentEvent.getlocation() != null) {
@@ -98,7 +97,7 @@ public class ValidationController {
         if (theEvent != null) eventCacher.addEventToCache(theEvent);
     }
 
-    private Event getCurrentEvent(String panelId, String cardId, String accessAllowed) {
+    private Event getCurrentEvent(String panelId, String cardId, boolean accessAllowed) {
         return populateCurrentEvent(panelId, cardId, accessAllowed);
     }
 
@@ -106,7 +105,7 @@ public class ValidationController {
         return (Event)eventCacher.getEventFromCache(key);
     }
 
-    private Event populateCurrentEvent(String panelId, String cardId, String accessAllowed) {
+    private Event populateCurrentEvent(String panelId, String cardId, boolean accessAllowed) {
         Event currentEvent = new Event(panelId, cardId, accessAllowed);
         currentEvent.resolveLocation();
 

@@ -13,12 +13,12 @@ public class Event implements IEvent {
     private final String panelId;
     private final String cardId;
     private Location location;
-    private final String accessAllowed;
+    private final boolean accessAllowed;
     @JsonIgnore
     private final String key;
     private Timestamp timestamp;
 
-    public Event(String panelId, String cardId, String accessAllowed) {
+    public Event(String panelId, String cardId, boolean accessAllowed) {
         this.panelId = panelId;
         this.cardId = cardId;
         this.accessAllowed = accessAllowed;
@@ -61,7 +61,7 @@ public class Event implements IEvent {
         return this.location;
     }
 
-    public String getAccessAllowed() {
+    public boolean getAccessAllowed() {
         return this.accessAllowed;
     }
 
