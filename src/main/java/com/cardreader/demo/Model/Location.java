@@ -3,12 +3,15 @@ package com.cardreader.demo.Model;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
+import javax.persistence.Embedded;
+
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonPropertyOrder({ "coordinates", "altitude", "relativeLocation" })
 public class Location implements ILocation{
 
     private Double altitude;
     private String relativeLocation;
+    @Embedded
     private Coordinates coordinates;
 
     public Location() {

@@ -8,14 +8,14 @@ import org.springframework.stereotype.Component;
 @Component
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({ "reason", "currentEvent", "previousEvent", "validEvent" })
-public class InMemoryStore implements Store{
+public class JsonStore implements Store{
 
     private Event currentEvent;
     private Event previousEvent;
     private Boolean validEvent;
     private String reason;
 
-    public InMemoryStore() {
+    public JsonStore() {
     }
 
     @Override

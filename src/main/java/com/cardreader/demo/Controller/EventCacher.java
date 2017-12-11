@@ -1,11 +1,12 @@
 package com.cardreader.demo.Controller;
 
 import com.cardreader.demo.Model.Event;
+import com.cardreader.demo.Model.IEvent;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class EventCacher { ;
+public class EventCacher {
     private Map<String, Event> cache;
 
     public EventCacher() {
