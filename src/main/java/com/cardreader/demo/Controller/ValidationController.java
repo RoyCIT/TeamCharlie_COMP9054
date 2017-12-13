@@ -162,18 +162,17 @@ public class ValidationController implements ApplicationListener<ApplicationRead
 
         // Publish message
         if (doAlert) {
-            sendMqtt(currentEvent, previousEvent);
+            sendMqtt(jsonStore);
         }
         return jsonStore;
     }
 
     /**
      * Publish-Subscribe message
-     * @param currentEvent the current event
-     * @param previousEvent the previous event
+     * @param jsonStore the JSON
      */
-    private void sendMqtt(Event currentEvent, Event previousEvent) {
-        MqttUtility.getInstance().publishAlert(currentEvent, previousEvent);
+    private void sendMqtt(JsonStore jsonStore) {
+        MqttUtility.getInstance().publishAlert(jsonStore.getCurrentEvent(), jsonStore.getPreviousEvent());
     }
 
     /**
