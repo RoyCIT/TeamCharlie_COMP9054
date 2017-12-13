@@ -2,7 +2,7 @@ package com.cardreader.demo.Store;
 
 import com.cardreader.demo.Model.Event;
 
-public interface Store {
+public interface IJsonStore {
 
     void setCurrentEvent(Event currentEvent);
 

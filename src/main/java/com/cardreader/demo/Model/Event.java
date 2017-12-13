@@ -78,6 +78,10 @@ public class Event implements IEvent {
         return this.location;
     }
 
+    public void setLocation(Location l) {
+        this.location = l;
+    }
+
     public boolean getAccessAllowed() {
         return this.accessAllowed;
     }

@@ -2,27 +2,26 @@ package com.cardreader.demo.Controller;
 
 import com.cardreader.demo.Data.EventRepository;
 import com.cardreader.demo.Model.Event;
+import com.cardreader.demo.Model.ILocation;
+import com.cardreader.demo.Model.Location;
 import com.cardreader.demo.Mqtt.MqttUtility;
-import com.cardreader.demo.Store.Store;
+import com.cardreader.demo.Store.IJsonStore;
+import com.cardreader.demo.Store.JsonStore;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.HttpServerErrorException;
+import org.springframework.web.client.RestTemplate;
 
-import java.util.List;
+import java.util.*;
 
 @RestController
 @RequestMapping (value = "/api")
 public class ValidationController implements ApplicationListener<ApplicationReadyEvent> {
-
-    /**
-     * Internal store
-     * Spring knows which polymorphic type to use if there's a single implementation of the
-     * interface and it's annotated with @Component and Spring's component scan enabled.
-     */
-    @Autowired
-    private Store store;
 
     @Autowired
     private EventRepository eventData;
@@ -33,22 +32,24 @@ public class ValidationController implements ApplicationListener<ApplicationRead
      */
     private EventCacher eventCacher;
 
+    // store of panel locations
+    private Map<UUID, ILocation> panelLocations;
+
     /**
      * Default constructor
      */
     public ValidationController() {
         this.eventCacher = new EventCacher();
+        this.panelLocations = new HashMap<UUID, ILocation>();
     }
 
     @RequestMapping(value = "/panels/request", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
-    public Store getAccessByEvents(@RequestParam(value="panelid") String panelid,
-                                   @RequestParam(value="cardid") String cardid,
-                                   @RequestParam(value="allowed") boolean accessAllowed) {
+    public IJsonStore getAccessByEvents(@RequestParam(value="panelid") String panelid,
+                                        @RequestParam(value="cardid") String cardid,
+                                        @RequestParam(value="allowed") boolean accessAllowed) {
 
-        getEvents(panelid, cardid, accessAllowed);
-
-        return store;
+        return getEvents(panelid, cardid, accessAllowed);
     }
 
     /**
@@ -58,7 +59,18 @@ public class ValidationController implements ApplicationListener<ApplicationRead
     @Override
     public void onApplicationEvent(final ApplicationReadyEvent event) {
 
-        // Populate cache from database
+        // Populate event cache from database
+        updateEventCacheFromDB();
+
+        // Populate location cache from rest interface
+        updateLocationCacheFromRest();
+    }
+
+    /**
+     * Populate the in-memory event cache from database
+     */
+    private void updateEventCacheFromDB() {
+
         List<Event> allEvents = eventData.findAll();
         for (Event e : allEvents) {
             cacheEvent(e);
@@ -66,38 +78,69 @@ public class ValidationController implements ApplicationListener<ApplicationRead
     }
 
     /**
-     * Creates an Event instance for the current swipe
-     * Creates an Event instance for the previous swipe of this card
-     * Populates inMemoryStore instance from Events
+     * update the in-memory location cache from rest interface
+     */
+    private void updateLocationCacheFromRest() {
+
+        RestTemplate restTemplate = new RestTemplate();
+        String url = "http://uuidlocator.cfapps.io/api/panels/";
+        Location location;
+        UUID uuid;
+
+        try {
+            // Get all ids
+            ResponseEntity<String[]> allIds = restTemplate.getForEntity(url, String[].class);
+
+            for (String id : allIds.getBody()) {
+                uuid = UUID.fromString(id);
+                location = restTemplate.getForObject(url + id, Location.class);
+                if (location != null) {
+                    panelLocations.put(uuid, location);
+                }
+            }
+        }
+        catch (HttpMessageNotReadableException notReadable) {
+            // Do nothing??
+        }
+        catch (HttpServerErrorException serverError) {
+            // Do nothing??
+        }
+    }
+    /**
+     * INstantiate and populate jsonStore object which is bound to JSON
      * Sends a post subscribe message if required
      *
      * @param panelId       the panelId of the current event
      * @param cardId        the cardId of the current event
      * @param accessAllowed is local access allowed for the current event
      */
-    private void getEvents(String panelId, String cardId, boolean accessAllowed) {
+    private JsonStore getEvents(String panelId, String cardId, boolean accessAllowed) {
 
-        // TODO: create inmemorystore for locations and ability for client to update / refresh data from uuid
-        // TODO: Swagger
-
-        String reason;
         boolean isValidEvent = false;
         boolean doAlert = false;
+        JsonStore jsonStore = new JsonStore();
+
+        // Instantiate currentEvent and populate location
         Event currentEvent = populateCurrentEvent(panelId, cardId, accessAllowed);
+        // Get previous event from cache
         Event previousEvent = getPreviousEventFromKey(currentEvent.getKey());
 
+        // Jackson is used to bind jsonStore to JSON. Populate jsonStore
+        jsonStore.setCurrentEvent(currentEvent);
+        jsonStore.setPreviousEvent(previousEvent);
+
+        // Local access has been created
         if (currentEvent.getAccessAllowed()) {
 
-            // Has UUID locator been successful
             if (currentEvent.getlocation() != null) {
                 // Determine if locations are feasible/valid
                 isValidEvent = validateLocations(previousEvent, currentEvent);
 
                 if (isValidEvent) {
-                    reason = "Valid event.";
+                    jsonStore.setReason("Valid event.");
                 }
                 else {
-                    reason = "Impossible time-distance event.";
+                    jsonStore.setReason("Impossible time-distance event.");
                     doAlert = true;
                 }
                 // Only cache events where the location has been resolved
@@ -107,24 +150,30 @@ public class ValidationController implements ApplicationListener<ApplicationRead
                 eventData.save(currentEvent);
             }
             else {
-                reason = "Unknown panel id, unable to resolve location";
+                jsonStore.setReason("Unknown panel id, unable to resolve location");
             }
         }
         else {
             // Local access has been declined
-            reason = "Local access denied for this event.";
+            jsonStore.setReason("Local access denied for this event.");
         }
 
-        // populate the store
-        store.setCurrentEvent(currentEvent);
-        store.setPreviousEvent(previousEvent);
-        store.setValidEvent(isValidEvent);
-        store.setReason(reason);
+        jsonStore.setValidEvent(isValidEvent);
 
         // Publish message
         if (doAlert) {
-            MqttUtility.getInstance().publishAlert(store.getCurrentEvent(), store.getPreviousEvent());
+            sendMqtt(currentEvent, previousEvent);
         }
+        return jsonStore;
+    }
+
+    /**
+     * Publish-Subscribe message
+     * @param currentEvent the current event
+     * @param previousEvent the previous event
+     */
+    private void sendMqtt(Event currentEvent, Event previousEvent) {
+        MqttUtility.getInstance().publishAlert(currentEvent, previousEvent);
     }
 
     /**
@@ -148,13 +197,9 @@ public class ValidationController implements ApplicationListener<ApplicationRead
      *
      * @param theEvent the current event
      */
-    public void cacheEvent(Event theEvent) {
+    private void cacheEvent(Event theEvent) {
         if (theEvent != null) eventCacher.addEventToCache(theEvent);
     }
-
-//    private Event getCurrentEvent(String panelId, String cardId, boolean accessAllowed) {
-//        return populateCurrentEvent(panelId, cardId, accessAllowed);
-//    }
 
     /**
      * Retrieve Event from cache using the key
@@ -177,9 +222,21 @@ public class ValidationController implements ApplicationListener<ApplicationRead
      */
     private Event populateCurrentEvent(String panelId, String cardId, boolean accessAllowed) {
         Event currentEvent = new Event(panelId, cardId, accessAllowed);
-        currentEvent.resolveLocation();
 
+        // lookup panel location cache by uuid
+        UUID uuid = UUID.fromString(currentEvent.getPanelId());
+        Location l = (Location)panelLocations.get(uuid);
+
+        if (l != null) {
+            // use the cache
+            currentEvent.setLocation(l);
+        }
+        else {
+            // call rest interface
+            currentEvent.resolveLocation();
+            // update the cache
+            panelLocations.put(uuid, currentEvent.getlocation());
+        }
         return currentEvent;
     }
-
 }
