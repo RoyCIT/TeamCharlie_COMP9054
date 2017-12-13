@@ -24,6 +24,6 @@ public class HaversineValidation {
 
         distance = sqrt(pow(distance, 2) + pow(height, 2));
 
-        return Integer.valueOf((int) distance * 1000); //metres
+        return Integer.valueOf((int) (distance * 1000)); //metres
     }
 }
