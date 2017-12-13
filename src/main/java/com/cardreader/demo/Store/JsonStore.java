@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 @Component
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({ "reason", "currentEvent", "previousEvent", "validEvent" })
-public class JsonStore implements Store{
+public class JsonStore implements IJsonStore {
 
     private Event currentEvent;
     private Event previousEvent;
