@@ -82,6 +82,10 @@ public class Event implements IEvent {
         this.location = l;
     }
 
+    public void setTimestamp(Timestamp timestamp) {
+        this.timestamp = timestamp;
+    }
+
     public boolean getAccessAllowed() {
         return this.accessAllowed;
     }

@@ -9,10 +9,10 @@ public class GoogleMapsValidationController {
 
     private static String GOOGLE_API_KEY = "AIzaSyBTWLLeJ7HU6ojUs39VtTzXNtyHrzjMyQg";
 
-    private static Integer FLIGHT_THRESHOLD = 500000;
-    private static Double FLIGHT_SPEED = 600.0; //600km/h
+    private static Integer FLIGHT_THRESHOLD = 300000; //300km
+    private static Double FLIGHT_SPEED = 600.0; //400km/h
 
-    private static Integer DRIVING_THRESHOLD = 500;
+    private static Integer DRIVING_THRESHOLD = 300; //300m
     private static Double DRIVING_SPEED = 100.0; //100km/h
 
     private static Double WALKING_SPEED = 5.0; //5km/h
@@ -34,9 +34,10 @@ public class GoogleMapsValidationController {
         final Double timeElapsed = Double.valueOf(currentEvent.getTimestamp().getTime() - previousEvent.getTimestamp().getTime()) / 1000.0; // seconds
         Double timeRequired = 0.0;
 
-        if (haversineDistance > FLIGHT_THRESHOLD) { //500km
+        if (haversineDistance > FLIGHT_THRESHOLD) {
             //Flying, do manually
             timeRequired = haversineDistance / (FLIGHT_SPEED * KMPH_TO_MPH); // distance / metres per second
+            timeRequired += 2 * 60 * 60; // 2 hours for check in
         } else if (haversineDistance > DRIVING_THRESHOLD) {
             //Driving
             timeRequired = getGoogleMapDuration(previousEvent.getlocation().getCoordinates(), currentEvent.getlocation().getCoordinates(), "driving");
@@ -50,7 +51,7 @@ public class GoogleMapsValidationController {
                 timeRequired = haversineDistance / (WALKING_SPEED * KMPH_TO_MPH); // distance / metres per second
             }
             double altitudeChange = Math.abs(previousEvent.getlocation().getAltitude() - currentEvent.getlocation().getAltitude());
-            timeRequired = timeRequired + (ALTITUDE_MPS * altitudeChange);
+            timeRequired += (ALTITUDE_MPS * altitudeChange);
         }
 
         return timeRequired < timeElapsed;
