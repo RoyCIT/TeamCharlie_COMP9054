@@ -10,6 +10,13 @@ public class HaversineValidation {
 
     private static final int EARTH_RADIUS = 6371; // Approx Earth radius in KM
 
+    /**
+     * Method to measure the distance between two location objects
+     *
+     * @param first the first location object
+     * @param second  the second location object
+     * @return              Integer the distance between two locations
+     */
     public static Integer getHaversineDistance(Location first, Location second) {
 
         double latDistance = toRadians(second.getCoordinates().getLatitude() - first.getCoordinates().getLatitude());
