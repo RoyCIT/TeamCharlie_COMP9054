@@ -17,6 +17,8 @@ import org.springframework.web.context.WebApplicationContext;
 import org.springframework.test.web.servlet.MockMvc;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = SoftwareArchitectureApplication.class)
@@ -42,14 +44,54 @@ public class ValidationControllerTest {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(wac).build();
 
     }
-
+/** Simple initial test, as DB is entry the previous event will not exist on start up,
+ *  so the events are for the CIT Library North exit. This should result in a positive
+ *  response.
+ */
     @Test
-    public void testInitialCard1() throws Exception {
-        //mockMvc.perform(MockMvcRequestBuilders.get("/api/panels/request").accept(MediaType.APPLICATION_JSON)).andDo(print());
+    public void testInitialCard_CIT_Library_North() throws Exception {
+
         mockMvc.perform(MockMvcRequestBuilders.get("/api/panels/request").contentType(MediaType.APPLICATION_JSON)
                 .param("panelid",cit_lib_north)
                 .param("cardid",card_2)
                 .param("allowed","true"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType("application/json;charset=UTF-8"))
+                .andExpect(jsonPath("$.reason").value("Valid event."))
+                .andExpect(jsonPath("$.currentEvent").exists())
+                .andExpect(jsonPath("$.currentEvent.panelId").exists())
+                .andExpect(jsonPath("$.currentEvent.cardId").exists())
+                .andExpect(jsonPath("$.currentEvent.timestamp").exists())
+                .andExpect(jsonPath("$.currentEvent.location").exists())
+                .andExpect(jsonPath("$.currentEvent.location.coordinates").exists())
+                .andExpect(jsonPath("$.currentEvent.location.coordinates.longitude").exists())
+                .andExpect(jsonPath("$.currentEvent.location.coordinates.latitude").exists())
+                .andExpect(jsonPath("$.currentEvent.location.altitude").exists())
+                .andExpect(jsonPath("$.currentEvent.location.relativeLocation").exists())
+                .andExpect(jsonPath("$.currentEvent.accessAllowed").exists())
+                .andExpect(jsonPath("$.previousEvent").doesNotExist())
+                .andExpect(jsonPath("$.previousEvent.panelId").doesNotExist())
+                .andExpect(jsonPath("$.previousEvent.cardId").doesNotExist())
+                .andExpect(jsonPath("$.previousEvent.timestamp").doesNotExist())
+                .andExpect(jsonPath("$.previousEvent.location").doesNotExist())
+                .andExpect(jsonPath("$.previousEvent.location.coordinates").doesNotExist())
+                .andExpect(jsonPath("$.previousEvent.location.coordinates.longitude").doesNotExist())
+                .andExpect(jsonPath("$.previousEvent.location.coordinates.latitude").doesNotExist())
+                .andExpect(jsonPath("$.previousEvent.location.altitude").doesNotExist())
+                .andExpect(jsonPath("$.previousEvent.location.relativeLocation").doesNotExist())
+                .andExpect(jsonPath("$.previousEvent.accessAllowed").doesNotExist())
+                .andExpect(jsonPath("$.validEvent").exists())
+                .andDo(print());
+    }
+
+    @Test
+    public void testSecondCard_CIT_Library_West() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/panels/request").contentType(MediaType.APPLICATION_JSON)
+                .param("panelid",cit_lib_west)
+                .param("cardid",card_2)
+                .param("allowed","true"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andExpect(jsonPath("$.reason").exists())
                 .andExpect(jsonPath("$.currentEvent").exists())
                 .andExpect(jsonPath("$.currentEvent.panelId").exists())
@@ -73,8 +115,10 @@ public class ValidationControllerTest {
                 .andExpect(jsonPath("$.previousEvent.location.altitude").exists())
                 .andExpect(jsonPath("$.previousEvent.location.relativeLocation").exists())
                 .andExpect(jsonPath("$.previousEvent.accessAllowed").exists())
-                .andExpect(jsonPath("$.validEvent").exists())
+                .andExpect(jsonPath("$.validEvent").value("false"))
                 .andDo(print());
     }
+
+
 
 }
