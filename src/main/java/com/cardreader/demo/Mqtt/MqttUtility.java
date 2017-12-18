@@ -6,7 +6,11 @@ import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 
-
+/**
+ * This is the MQTT Utility class . It is singleton. It handles
+ * Connecting, and Publishing of messages to the MQ Broker
+ * on the default port
+ */
 public class MqttUtility {
 
     private static MqttUtility instance = null;
@@ -32,7 +36,13 @@ public class MqttUtility {
         }
         return MqttUtility.instance;
     }
-
+    /**
+     * This method is used to Connect to a MQTT Broker
+     * and Publish an message to it. The Message is created from
+     * two Events and generated into a JSON message.
+     * @param currentEvent This the current Event/Card Swipe
+     * @param prevEvent  This the previous Event/Card Swipe
+     */
     public void publishAlert(Event currentEvent, Event prevEvent) {
         try {
             client = new MqttClient(host+":"+port, "CloneAlert");
