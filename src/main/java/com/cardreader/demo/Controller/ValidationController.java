@@ -61,10 +61,10 @@ public class ValidationController implements ApplicationListener<ApplicationRead
     @Override
     public void onApplicationEvent(final ApplicationReadyEvent event) {
 
-        // Populate event cache from database
+        // Populate the Event cache from database
         updateEventCacheFromDB();
 
-        // Populate location cache from rest interface
+        // Populate Location cache from rest interface
         updateLocationCacheFromRest();
     }
 
@@ -109,7 +109,7 @@ public class ValidationController implements ApplicationListener<ApplicationRead
         }
     }
     /**
-     * INstantiate and populate jsonStore object which is bound to JSON
+     * Instantiate and populate jsonStore object which is bound to JSON
      * Sends a post subscribe message if required
      *
      * @param panelId       the panelId of the current event
