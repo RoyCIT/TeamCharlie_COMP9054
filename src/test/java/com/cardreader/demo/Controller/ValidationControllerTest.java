@@ -32,7 +32,7 @@ public class ValidationControllerTest {
 
 
     private static String cit_lib_north = "7907775e-15ac-415f-a99c-e978856c8ec0";
-    private static String cit_lib_west = "7907775e-15ac-415f-a99c-e978856c8ec0";
+    private static String cit_lib_west = "580ddc98-0db9-473d-a721-348f353f1d2b";
 
 
 
