@@ -7,6 +7,7 @@ import com.cardreader.demo.Model.Location;
 import com.cardreader.demo.Mqtt.MqttUtility;
 import com.cardreader.demo.Store.IJsonStore;
 import com.cardreader.demo.Store.JsonStore;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationListener;
@@ -45,6 +46,7 @@ public class ValidationController implements ApplicationListener<ApplicationRead
 
     @RequestMapping(value = "/panels/request", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
+    @ApiOperation(value = "Validate if possible cloned card based on Panel Location and Card Id also if Accessed allowed to the Panel")
     public IJsonStore getAccessByEvents(@RequestParam(value="panelid") String panelid,
                                         @RequestParam(value="cardid") String cardid,
                                         @RequestParam(value="allowed") boolean accessAllowed) {
