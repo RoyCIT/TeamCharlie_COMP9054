@@ -43,7 +43,7 @@ public class MqttUtility {
      * @param currentEvent This the current Event/Card Swipe
      * @param prevEvent  This the previous Event/Card Swipe
      */
-    public void publishAlert(Event currentEvent, Event prevEvent) {
+    public boolean publishAlert(Event currentEvent, Event prevEvent) {
         try {
             client = new MqttClient(host+":"+port, "CloneAlert");
             client.connect();
@@ -52,8 +52,10 @@ public class MqttUtility {
             message.setPayload(jsonMessage.getJsonObject().toString().getBytes());
             client.publish(topic, message);
             client.disconnect();
+            return true;
         } catch (MqttException e) {
             System.out.println("Unable to Connect to Message Broker, unable to send Alert");
+            return false;
         }
     }
 

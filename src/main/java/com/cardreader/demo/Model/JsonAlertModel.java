@@ -69,19 +69,7 @@ public class JsonAlertModel {
 
         }
 
-        private boolean validateLocations(Event previousEvent, Event currentEvent) {
-            return true;
-        }
 
-
-
-        public Event getCurrentEvent() {
-            return this.currentEvent;
-        }
-
-        public Event getPreviousEvent() {
-            return this.previousEvent;
-        }
 
 
 
