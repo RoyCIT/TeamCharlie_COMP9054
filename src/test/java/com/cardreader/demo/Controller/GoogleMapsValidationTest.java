@@ -27,7 +27,7 @@ public class GoogleMapsValidationTest {
 
     private static Integer MS_PER_SEC = 1000;
 
-    private static Event buildEvent(Double latitude, Double longitude, Double altitude, Timestamp timestamp) {
+    public static Event buildEvent(Double latitude, Double longitude, Double altitude, Timestamp timestamp) {
         Event event = new Event();
         Location location = new Location();
         location.setAltitude(altitude);
