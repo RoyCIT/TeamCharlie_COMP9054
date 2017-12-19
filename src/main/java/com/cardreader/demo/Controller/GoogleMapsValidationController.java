@@ -10,11 +10,10 @@ public class GoogleMapsValidationController {
     private static String GOOGLE_API_KEY = "AIzaSyBTWLLeJ7HU6ojUs39VtTzXNtyHrzjMyQg";
 
     private static Integer FLIGHT_THRESHOLD = 300000; //300km
-    private static Double FLIGHT_SPEED = 600.0; //400km/h
-
     private static Integer DRIVING_THRESHOLD = 300; //300m
-    private static Double DRIVING_SPEED = 100.0; //100km/h
 
+    private static Double FLIGHT_SPEED = 600.0; //400km/h
+    private static Double DRIVING_SPEED = 100.0; //100km/h
     private static Double WALKING_SPEED = 5.0; //5km/h
 
     private static Double KMPH_TO_MPH = 0.277778;
@@ -42,7 +41,7 @@ public class GoogleMapsValidationController {
             //Driving
             timeRequired = getGoogleMapDuration(previousEvent.getlocation().getCoordinates(), currentEvent.getlocation().getCoordinates(), "driving");
             if (timeRequired == null) { // If the google request fails
-                timeRequired = haversineDistance / (FLIGHT_SPEED * KMPH_TO_MPH); // distance / metres per second
+                timeRequired = haversineDistance / (DRIVING_SPEED * KMPH_TO_MPH); // distance / metres per second
             }
         } else {
             //Walking
