@@ -42,7 +42,7 @@ public class JsonAlertModelTest {
         assertEquals(sentJASONObject.getJSONObject("currentEvent").getString("cardId"),card_1);
         assertEquals(sentJASONObject.getJSONObject("currentEvent").getBoolean("accessAllowed"),true);
         assertEquals(sentJASONObject.getString("title"),"Possible Cloned Access Card");
-        assertEquals(sentJASONObject.getString("description"),"An access-card has been used that was very recently used in" +
+        assertEquals(sentJASONObject.getString("description"),"An access-card has been used that was very recently used in " +
         "another location, indicating that it is unlikely to be the same card-holder");
     }
     private static Event buildEvent(String panel, String card, Double latitude, Double longitude, Double altitude, Timestamp timestamp) {
